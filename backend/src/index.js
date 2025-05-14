@@ -17,40 +17,37 @@ const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
 app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: [
-                "'self'",
-                "'unsafe-inline'",
-                "https://cdn.jsdelivr.net",
-            ],
-            styleSrc: [
-                "'self'",
-                "'unsafe-inline'",
-                "https://fonts.googleapis.com",
-            ],
-            imgSrc: ["'self'", "data:"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-            connectSrc: [
-                "'self'",
-                "https://libretranslate-service.onrender.com",
-            ],
-            objectSrc: ["'none'"],
-            upgradeInsecureRequests: [],
-        },
-    })
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc:  ["'self'", "'unsafe-inline'"],
+      styleSrc:   ["'self'", "'unsafe-inline'"],
+      imgSrc:     ["'self'", "data:"],
+      fontSrc:    ["'self'", "data:"],
+      connectSrc: [
+        "'self'",
+        "https://libretranslate-service.onrender.com",
+        "https://baatcheet-4oi5.onrender.com"  // <-- your frontend origin
+      ],
+      objectSrc:  ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  })
 );
 
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
+    cors({
+        origin: [
+            "http://localhost:5173", // local dev
+            "https://baatcheet-4oi5.onrender.com", // production
+        ],
+        credentials: true,
+    })
 );
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
