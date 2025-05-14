@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const LIBRE_URL = "http://localhost:5000";
+const LIBRE_URL = process.env.LIBRE_URL || "http://localhost:5000";
 
 /**
  * Detects the language of the given text.
