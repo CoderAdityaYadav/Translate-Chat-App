@@ -23,7 +23,7 @@ app.use(
       scriptSrc:  ["'self'", "'unsafe-inline'"],
       styleSrc:   ["'self'", "'unsafe-inline'"],
       imgSrc:     ["'self'", "data:"],
-      fontSrc:    ["'self'", "data:"],
+      fontSrc:    ["'self'"],
       connectSrc: [
         "'self'",
         "https://libretranslate-service.onrender.com",
@@ -34,6 +34,15 @@ app.use(
     },
   })
 );
+app.use((req, res, next) => {
+    const existing = res.getHeader("Content-Security-Policy") || "";
+    const fontDirective = "font-src 'self' data:;";
+    const updated = existing.includes("font-src")
+        ? existing.replace(/font-src[^;]*;/, fontDirective)
+        : existing + " " + fontDirective;
+    res.setHeader("Content-Security-Policy", updated.trim());
+    next();
+});
 
 
 app.use(express.json());
