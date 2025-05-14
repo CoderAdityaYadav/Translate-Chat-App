@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import helmet from "helmet";
 import path from "path";
 
 import { connectDB } from "./lib/db.js";
@@ -15,6 +15,33 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
+
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://cdn.jsdelivr.net",
+            ],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com",
+            ],
+            imgSrc: ["'self'", "data:"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+            connectSrc: [
+                "'self'",
+                "https://libretranslate-service.onrender.com",
+            ],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
+        },
+    })
+);
+
 
 app.use(express.json());
 app.use(cookieParser());
