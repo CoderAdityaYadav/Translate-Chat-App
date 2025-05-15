@@ -2,19 +2,36 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
 import path from "path";
-
 import { connectDB } from "./lib/db.js";
-
+import helmet from "helmet";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
 dotenv.config();
-
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
+
+// ...existing code...
+
+dotenv.config();
+
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
+                imgSrc: ["'self'", "data:"],
+                scriptSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            },
+        },
+    })
+);
+
+// ...existing code...
 
 app.use(express.json());
 app.use(cookieParser());
